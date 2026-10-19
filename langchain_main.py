@@ -148,6 +148,7 @@ def run_langchain_sandbox(choice, user_input):
     else:
         print("\nInvalid choice.\n")
 
+    return
 
 if __name__ == "__main__":
     choice =  int(input("""
