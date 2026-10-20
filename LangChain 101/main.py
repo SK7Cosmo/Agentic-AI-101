@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
+from helper_utilities import show_agent_workflow
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -17,9 +18,9 @@ load_dotenv()
 llm_model = ChatGroq(model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
                      temperature=0.7) # Lower the temperature, more factual
 
-def build_naive_math_agent(question):
+def execute_naive_math_agent(question):
 
-    # Combine all tools into a list
+    # Combine all local tools into a list
     tools = [add, subtract, multiply, divide]
 
     # Create the agent
@@ -36,7 +37,7 @@ def build_naive_math_agent(question):
     return result
 
 
-async def build_mcp_news_agent():
+async def execute_mcp_news_agent():
     """
         Main async function — MCP connections are async because
         they involve I/O (spawning processes, network calls).
@@ -99,51 +100,17 @@ def run_langchain_sandbox(choice, user_input):
 
     elif choice == 3:
         # Run the naive math agent with user query
-        result = build_naive_math_agent(user_input)
+        result = execute_naive_math_agent(user_input)
         print("\nAgent Execution Trace")
 
         if len(result["messages"]) == 2 :
             print("\nLLM probably answered directly with no tool calls")
             print("\n")
 
-        step = 1
-        for msg in result["messages"]:
-            # 1. Human message = original user question
-            if msg.type == "human":
-                print(f"{step}. User asked:")
-                print(f"   {msg.content}")
-                print("\n")
-                step += 1
-
-            # 2. AI message with tool_calls
-            elif msg.type == "ai" and getattr(msg, "tool_calls", None):
-                for tool_call in msg.tool_calls:
-                    tool_name = tool_call["name"]
-                    tool_args = tool_call["args"]
-
-                    print(f"{step}. Agent decision:")
-                    print(f"   I need to use the tool: {tool_name}")
-                    print(f"   Tool input: {tool_args}")
-                    print("\n")
-                    step += 1
-
-            # 3. Tool message = result returned by the tool
-            elif msg.type == "tool":
-                print(f"{step}. Tool observation:")
-                print(f"   Tool returned: {msg.content}")
-                print("\n")
-                step += 1
-
-            # 4. Final AI message
-            elif msg.type == "ai" and msg.content:
-                print(f"{step}. Final answer:")
-                print(f"   {msg.content}")
-                print("\n")
-                step += 1
+        show_agent_workflow(result)
 
     elif choice == 4:
-        print("\n")
-        print("Retrieved the response from MCP powered News Agent")
+        asyncio.run(execute_mcp_news_agent())
 
     else:
         print("\nInvalid choice.\n")
@@ -166,8 +133,5 @@ if __name__ == "__main__":
         user_input = input("""\nEnter the python topic to be explained: """)
     if choice == 3:
         user_input = input("""\nEnter a basic math query involving add, subtract, multiply, and divide: """)
-    if choice == 4:
-        asyncio.run(build_mcp_news_agent())
-        # Sample news query: Give me 3 latest cricket news updates
 
     run_langchain_sandbox(choice, user_input)

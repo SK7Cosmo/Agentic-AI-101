@@ -30,7 +30,9 @@ def run_openai_sandbox(choice, user_input):
         Hence, it is not possible to maintain memory context in server side
         
         Direct OpenAI API: chaining "response.id" as "previous_response_id"
-        Third-party OpenAI-compatible APIs (Groq): chaining through messages array"""
+                           uses Responses API
+        Third-party OpenAI-compatible APIs (Groq): chaining through messages array
+                                                   uses Chat completions API"""
 
         # Client side context management
         messages = [{
@@ -93,9 +95,9 @@ def run_openai_sandbox(choice, user_input):
 
 if __name__ == "__main__":
     choice = int(input("""
-      OpenAI Sandbox Options:. 
-      1. Responses API - Single-turn chat
-      2. Responses API - Multi-turn Chat (Type 'exit' to quit)
+      OpenAI Responses API Sandbox Options: 
+      1. Single-turn chat
+      2. Multi-turn Chat (Type 'exit' to quit)
       Enter the option number to be executed: """))
     user_input = "Hello World"
 
@@ -103,6 +105,5 @@ if __name__ == "__main__":
         user_input = input("""\nEnter your query: """)
     elif choice == 2:
         pass
-
 
     run_openai_sandbox(choice, user_input)
