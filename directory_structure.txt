@@ -1,0 +1,21 @@
+Oracle Agentic AI/
+│
+├── LangChain 101/
+│   
+│   ├── custom_local_tools.py
+│   ├── helper_utilities.py
+│   ├── main.py
+│   └── mcp_news_server.py
+├── OpenAI-Groq 101/
+│   
+│   ├── Agents SDK/
+│   │   
+│   │   ├── custom_function_tools.py
+│   │   ├── main.py
+│   │   └── multi_agent_handoffs.py
+│   └── Responses API/
+│       
+│       └── main.py
+├── .env
+├── .gitignore
+└── tree_generator.py

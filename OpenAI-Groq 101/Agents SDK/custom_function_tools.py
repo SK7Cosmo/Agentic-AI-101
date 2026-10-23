@@ -2,7 +2,7 @@
 import json
 import urllib.parse
 import urllib.request
-from agents import Agent, Runner, function_tool, OpenAIChatCompletionsModel
+from agents import function_tool
 
 
 @function_tool
