@@ -95,6 +95,7 @@ if __name__ == "__main__":
         # 1. I got locked out of my account after entering the wrong 2FA code
         # 2. My external monitor keeps flickering and going black when plugged into the dock.
         # 3. VS Code crashes every time I try to launch the Python debugger.
+        # 4. What is 2+5?
     else:
         print("\nInvalid choice.\n")
 
